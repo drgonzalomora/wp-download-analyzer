@@ -25,12 +25,21 @@
     $default_options = array('slug' => '');
     $options = get_option('wp_download_analyzer_options', $default_options);
     $slug = $options['slug'];
+
+    // TEMPORARY
+    $analysis_type = 'plugin';
     
     if (empty($slug)) {
         return "Please set a slug for the Plugin or Theme Downloads you wish to analyze.";
     }
     
-    $url = "http://api.wordpress.org/stats/plugin/1.0/downloads.php?slug={$slug}";
+    if ($analysis_type == 'plugin'){
+        $url = "http://api.wordpress.org/stats/plugin/1.0/downloads.php?slug={$slug}";
+        $history_url = "http://api.wordpress.org/stats/plugin/1.0/downloads.php?slug={$slug}&historical_summary=1";
+    } elseif ($analysis_type == 'theme'){
+        $url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}";
+        $history_url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}&historical_summary=1";
+    }
     $response = wp_remote_get($url);
 
     if (is_wp_error($response)) {
@@ -39,11 +48,24 @@
 
     $downloads_data = json_decode(wp_remote_retrieve_body($response), true);
 
+    // Analysis header
+    $header = "";
+    $header .= "<h1>WP Download Analyzer: {$slug}</h1>";
+    $header .= "<p><b>Type: {$analysis_type}</bp</p>";
+
+    $plugin_link = "https://wordpress.org/plugins/{$slug}/";
+    $header .= "<p><b>Wordpress Plugin may be found here: <a href='{$plugin_link}' target='_blank'>{$slug}</a></b></p>";
+    // $header .= "<p></p>";
+
+    // Return no data available
     if (empty($downloads_data)) {
-        return "No data available.";
+        return $header . "<div><p>No data available.</p></div>";
     }
 
-    $table = '<table class="wp-stats-table">';
+    // Return data if available
+    $table = "";
+    $table .= "<div>";
+    $table .= '<table class="wp-stats-table">';
     $table .= '<thead><tr><th>Date</th><th>Downloads</th></tr></thead><tbody>';
 
     foreach ($downloads_data as $date => $downloads) {
@@ -51,34 +73,11 @@
     }
 
     $table .= '</tbody></table>';
-
-    $plugin_link = "https://wordpress.org/plugins/{$slug}/";
-    $header = "<h2><a href='{$plugin_link}' target='_blank'>{$slug}</a></h2>";
+    $table .= '</div>';
 
     return $header . $table;
 }
-
 add_shortcode('wp_download_analyzer', 'wp_download_analyzer');
-
-function wp_download_analyzer_styles() {
-    echo '<style>
-        .wp-stats-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        .wp-stats-table th,
-        .wp-stats-table td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        .wp-stats-table thead {
-            background-color: #f5f5f5;
-        }
-    </style>';
-}
-add_action('wp_head', 'wp_download_analyzer_styles');
 
 
 // Add the settings page to the WordPress admin menu.
@@ -92,6 +91,7 @@ function wp_download_analyzer_menu() {
     );
 }
 add_action('admin_menu', 'wp_download_analyzer_menu');
+
 
 // Create the settings page content.
 function wp_download_analyzer_options_page() {
@@ -108,6 +108,7 @@ function wp_download_analyzer_options_page() {
     </div>
     <?php
 }
+
 
 // Register and define the plugin settings.
 function wp_download_analyzer_settings() {
@@ -134,6 +135,7 @@ function wp_download_analyzer_settings() {
 }
 add_action('admin_init', 'wp_download_analyzer_settings');
 
+
 // Display the section text.
 function wp_download_analyzer_section_text() {
     echo '<p>Enter the plugin or theme slug to display its downloads statistics:</p>';
@@ -145,8 +147,15 @@ function wp_download_analyzer_setting_slug() {
     echo "<input id='wp_download_analyzer_slug' name='wp_download_analyzer_options[slug]' size='40' type='text' value='{$options['slug']}' />";
 }
 
+
 // Validate and sanitize the plugin settings input.
 function wp_download_analyzer_options_validate($input) {
     $newinput['slug'] = sanitize_text_field($input['slug']);
     return $newinput;
 }
+
+// Add the style.css file
+function wp_download_analyzer_styles() {
+    wp_enqueue_style('wp-download-analyzer-style', plugin_dir_url(__FILE__) . 'assets/css/style.css');
+}
+add_action('wp_enqueue_scripts', 'wp_download_analyzer_styles');
