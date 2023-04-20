@@ -16,3 +16,8 @@
 .wp-stats-table thead {
     background-color: #f5f5f5;
 }
+
+.chart-container {
+    width: 70ch;
+    height: 400px;
+}

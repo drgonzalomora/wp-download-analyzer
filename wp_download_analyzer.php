@@ -76,7 +76,7 @@
     // Analysis header
     $header = "";
     $header .= "<h1>WP Download Analyzer: {$slug}</h1>";
-    $header .= "<p><b>Type: {$analysis_type}</bp</p>";
+    $header .= "<p><b>Type: {$analysis_type}</b></p>";
     // Add download link
     $header .= '<p><a href="' . esc_url(admin_url('admin-post.php?action=wp_download_analyzer_download_csv')) . '">Download Data as CSV</a></p>';
 
@@ -138,7 +138,8 @@
     $table .= '</div>';
 
     // Chart the data
-    $table .= "<div style='width:100%; height: 400px;'><canvas id='downloadsChart' style='width: 100%; height: 100%;'></canvas></div>";
+    // $table .= "<div style='width:100%; height: 400px;'><canvas id='downloadsChart' style='width: 100%; height: 100%;'></canvas></div>";
+    $table .= "<div class='chart-container'><canvas id='downloadsChart'></canvas></div>";
 
     $chart_data = array(
         'labels' => array_keys($downloads_data),
@@ -291,7 +292,8 @@ function wp_download_analyzer_options_validate($input) {
 function wp_download_analyzer_styles() {
     wp_enqueue_style('wp-download-analyzer-style', plugin_dir_url(__FILE__) . 'assets/css/style.css');
     wp_enqueue_script('jquery');
-    wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array('jquery'), '3.7.0', true);
+    wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array('jquery'));
+    wp_enqueue_script('chartjs-adapter-date-fns', 'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js', array('chartjs'));
 }
 add_action('wp_enqueue_scripts', 'wp_download_analyzer_styles');
 add_action('admin_enqueue_scripts', 'wp_download_analyzer_styles');
