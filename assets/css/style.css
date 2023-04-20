@@ -21,3 +21,65 @@
     width: 70ch;
     height: 400px;
 }
+
+.wp_download_analyzer_tabs {
+    margin-bottom: 20px;
+}
+
+.wp_download_analyzer_tab_links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+.wp_download_analyzer_tab_links li {
+    margin-right: 5px;
+}
+
+.wp_download_analyzer_tab_links li a {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+}
+
+.wp_download_analyzer_tab_links li a.active {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.wp_download_analyzer_tab_content {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 3px;
+}
+
+.wp_download_analyzer_tab {
+    display: none;
+}
+
+.wpda-download-csv-btn {
+    background-color: #0073aa;
+    border: none;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.wpda-download-csv-btn:hover {
+    background-color: #005a87;
+    color: white;
+    text-decoration: none;
+}
+
+.button-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
