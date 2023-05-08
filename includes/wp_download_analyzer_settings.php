@@ -110,6 +110,14 @@ function wp_download_analyzer_settings() {
         'wp-download-analyzer-stats',
         'wp_download_analyzer_main'
     );
+
+    add_settings_field(
+        'wp_download_analyzer_analysis_type',
+        'Analysis Type',
+        'wp_download_analyzer_setting_analysis_type',
+        'wp-download-analyzer-stats',
+        'wp_download_analyzer_main'
+    );
 }
 add_action('admin_init', 'wp_download_analyzer_settings');
 
@@ -127,8 +135,22 @@ function wp_download_analyzer_setting_slug() {
 }
 
 
-// Validate and sanitize the plugin settings input.
 function wp_download_analyzer_options_validate($input) {
     $newinput['slug'] = sanitize_text_field($input['slug']);
+    $newinput['analysis_type'] = in_array($input['analysis_type'], array('Plugin', 'Theme')) ? $input['analysis_type'] : 'Plugin';
     return $newinput;
+}
+
+
+// Set the type of analysis: plugin or theme
+function wp_download_analyzer_setting_analysis_type() {
+    $default_options = array('analysis_type' => 'Plugin');
+    $options = get_option('wp_download_analyzer_options', $default_options);
+    $analysis_type = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
+    ?>
+    <select id='wp_download_analyzer_analysis_type' name='wp_download_analyzer_options[analysis_type]'>
+        <option value='Plugin' <?php selected($analysis_type, 'Plugin'); ?>>Plugin</option>
+        <option value='Theme' <?php selected($analysis_type, 'Theme'); ?>>Theme</option>
+    </select>
+    <?php
 }

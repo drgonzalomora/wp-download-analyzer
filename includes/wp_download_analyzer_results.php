@@ -14,24 +14,34 @@ if (!function_exists('wp_download_analyzer')) {
         $options = get_option('wp_download_analyzer_options', $default_options);
         $slug = $options['slug'];
 
-        // TEMPORARY
-        $analysis_type = 'plugin';
+        // Diagnostics Switch
+        $diagnostics = 'Off';
+
+        // Set the Analysis Type: Plugin or Theme
+        $options = get_option('wp_download_analyzer_options');
+        $analysis_type = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
         
         if (empty($slug)) {
-            return "Please set a slug for the Plugin or Theme Downloads you wish to analyze.";
+            return "Please set a slug for the Plugin or Theme downloads you wish to analyze.";
         }
         
-        if ($analysis_type == 'plugin'){
+        if ($analysis_type == 'Plugin'){
             $url =          "https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug={$slug}";
             $history_url =  "https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug={$slug}&historical_summary=1";
-            $version_url =  "https://api.wordpress.org/stats/plugin/1.0/?slug={$slug}";
-        } elseif ($analysis_type == 'theme'){
+            $api_url =  "https://api.wordpress.org/stats/plugin/1.0/?slug={$slug}";
+        } elseif ($analysis_type == 'Theme'){
             $url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}";
             $history_url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}&historical_summary=1";
+            // $history_url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}";
+            $api_url =  "https://api.wordpress.org/themes/info/1.0/";
         }
 
         // Retrieve the detailed data
-        $response = wp_remote_get($url);
+        if ($analysis_type == 'Plugin') {
+            $response = wp_remote_get($url);
+        } elseif ($analysis_type == 'Theme') {
+            $response = wp_remote_get($url);
+        }
 
         if (is_wp_error($response)) {
             return "Slug Error: " . $response->get_error_message();
@@ -53,12 +63,41 @@ if (!function_exists('wp_download_analyzer')) {
         }
 
         // Retrieve the version data
-        $response = wp_remote_get($version_url);
+        if ($analysis_type == 'Plugin') {
+            $response = wp_remote_get($api_url);
 
-        $version_data = json_decode(wp_remote_retrieve_body($response), true);
+            $version_data = json_decode(wp_remote_retrieve_body($response), true);
 
-        if (is_wp_error($version_data)) {
-            return "Version Error: " . $version_data->get_error_message();
+            if (is_wp_error($version_data)) {
+                return "Version Error: " . $version_data->get_error_message();
+            }
+        } elseif ($analysis_type == 'Theme') {
+            $response = wp_remote_post($api_url, array(
+                'body' => array(
+                    'action' => 'theme_information',
+                    'request' => serialize((object)array(
+                        'slug' => $slug,
+                        'fields' => array(
+                            'versions' => false, // Set this to true to get version details.
+                            'active_installs' => true, // Set this to true to get active installs.
+                            // Add any other fields you need here.
+                        )
+                    ))
+                )
+            ));
+
+            if (!is_wp_error($response)) {
+                $theme_details = unserialize(wp_remote_retrieve_body($response));
+                if ($diagnostics == 'On') {
+                    // Print the theme details, including the version details and active installs.
+                    echo '<pre>';
+                    print_r($theme_details);
+                    echo '</pre>';
+                }
+            } else {
+                echo 'An error occurred while fetching theme details.';
+            }
+
         }
 
         // Analysis header
@@ -74,13 +113,20 @@ if (!function_exists('wp_download_analyzer')) {
 
 
         $header .= "<p><b>Type: {$analysis_type}</b></p>";
-        $plugin_link = "https://wordpress.org/plugins/{$slug}/";
-        $header .= "<p><b>Wordpress {$analysis_type} may be found here: <a href='{$plugin_link}' target='_blank'>{$slug}</a></b></p>";
-        // This link is the same as the one above
-        // $header .= "<p>Plugin: <a href='{$plugin_link}' target='_blank' rel='nofollow'>{$plugin_link}</a></p>";
-        $header .= "<p>Plugin Version: <a href='{$version_url}' target='_blank' rel='nofollow'>{$version_url}</a></p>";
-        $header .= "<p>Plugin History: <a href='{$url}' target='_blank' rel='nofollow'>{$url}</a></p>";
-        $header .= "<p>Plugin Summary: <a href='{$history_url}' target='_blank' rel='nofollow'>{$history_url}</a></p>";
+
+        if ($analysis_type == 'Plugin') {
+            $slug_link = "https://wordpress.org/plugins/{$slug}/";
+        } elseif ($analysis_type == 'Theme') {
+            $slug_link = "https://wordpress.org/themes/{$slug}/";
+        } else {
+            return $header. "<div><p>Analysis Type Error</p></div>";
+        }
+        
+        $header .= "<p><b>Wordpress {$analysis_type} may be found here: <a href='{$slug_link}' target='_blank'>{$slug}</a></b></p>";
+        $header .= "<p>{$analysis_type} Details: <a href='{$slug_link}' target='_blank' rel='nofollow'>{$slug_link}</a></p>";
+        $header .= "<p>{$analysis_type} Version: <a href='{$api_url}' target='_blank' rel='nofollow'>{$api_url}</a></p>";
+        $header .= "<p>{$analysis_type} History: <a href='{$url}' target='_blank' rel='nofollow'>{$url}</a></p>";
+        $header .= "<p>{$analysis_type} Summary: <a href='{$history_url}' target='_blank' rel='nofollow'>{$history_url}</a></p>";
         
 
         //
@@ -88,7 +134,7 @@ if (!function_exists('wp_download_analyzer')) {
         //
         // Return no data available
         if (empty($downloads_data)) {
-            return $header . "<div><p>No data available.</p></div>";
+            return $header . "<div><p>Download Data: No data available.</p><p>{$history_url}</p></div>";
         }
 
         // Version data if available
@@ -97,10 +143,16 @@ if (!function_exists('wp_download_analyzer')) {
         $table .= "<div>";
         $table .= '<table class="wp-stats-table">';
         $table .= '<thead><tr><th>Version</th><th>% Downloads</th></tr></thead><tbody>';
-        
-        foreach ($version_data as $version => $downloads) {
-            $version_label = ucfirst(str_replace('_', ' ', $version));
-            $table .= "<tr><td>{$version_label}</td><td>{$downloads}</td></tr>";
+
+        if ($analysis_type == 'Plugin') {
+            foreach ($version_data as $version => $downloads) {
+                $version_label = ucfirst(str_replace('_', ' ', $version));
+                $table .= "<tr><td>{$version_label}</td><td>{$downloads}</td></tr>";
+            }
+        } elseif ($analysis_type == 'Theme') {
+            $version = $theme_details->version; // Extracts version (4.1.3)
+            $active_installs = $theme_details->active_installs; // Extracts active installs (1000000)
+            $table .= "<tr><td>" . $version . "</td><td>" . $active_installs . "</td></tr>";
         }
         
         $table .= '</tbody></table>';
@@ -133,53 +185,8 @@ if (!function_exists('wp_download_analyzer')) {
         $table .= '</tbody></table>';
         $table .= '</div>';
 
-        // Chart the data
-        $table .= "<h2>Chart Detail</h2>";
-        $table .= "<div class='chart-container'><canvas id='downloadsChart'></canvas></div>";
-
-        $chart_data = array(
-            'labels' => array_keys($downloads_data),
-            'datasets' => array(
-                array(
-                    'label' => 'Downloads',
-                    'data' => array_values($downloads_data),
-                    'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
-                    'borderColor' => 'rgba(75, 192, 192, 1)',
-                    'borderWidth' => 1
-                )
-            )
-        );
-        $chart_data_json = json_encode($chart_data);
-        
-        $chart_js = <<<EOT
-        <script>
-        jQuery(document).ready(function() {
-            var ctx = document.getElementById('downloadsChart').getContext('2d');
-            var chartData = {$chart_data_json};
-            var downloadsChart = new Chart(ctx, {
-                type: 'line',
-                data: chartData,
-                options: {
-                    scales: {
-                        x: {
-                            type: 'time',
-                            time: {
-                                unit: 'day'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-        });
-        </script>
-        EOT;
+        // CHARTING CODE WAS HERE - MOVED TO GRAPH
+        $chart_js = wp_download_analyzer_render_chart($downloads_data);
         
         return $header . $table . $chart_js;
     }
@@ -193,15 +200,15 @@ if (!function_exists('wp_download_analyzer')) {
         $slug = $options['slug'];
 
         // TEMPORARY
-        $analysis_type = 'plugin';
+        // $analysis_type = 'Plugin';
         
         if (empty($slug)) {
             wp_die("Please set a slug for the Plugin or Theme Downloads you wish to analyze.");
         }
         
-        if ($analysis_type == 'plugin'){
+        if ($analysis_type == 'Plugin'){
             $url = "https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug={$slug}";
-        } elseif ($analysis_type == 'theme'){
+        } elseif ($analysis_type == 'Theme'){
             $url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}";
         }
 

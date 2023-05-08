@@ -42,10 +42,14 @@ function wp_download_analyzer_enqueue_scripts($hook) {
 }
 add_action('admin_enqueue_scripts', 'wp_download_analyzer_enqueue_scripts');
 
+// Settings
+include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_settings.php';
 
- // Settings
- include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_settings.php';
+// Results
+include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_results.php';
 
- 
- // Results
- include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_results.php';
+// Graph
+include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_graph.php';
+
+// Dashboard
+include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_dashboard.php';
