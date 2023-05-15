@@ -11,42 +11,33 @@ if (!function_exists('wp_download_analyzer')) {
     function wp_download_analyzer($atts = array()) {
 
         wp_download_analyzer_enqueue_extra_styles();
-        
-        // Default values
-        $default_atts = array(
-            'slug' => '',
-            'type' => 'Plugin' // Either 'Plugin' or 'Theme'
-        );
-
-        // Merge the attributes with the default values
-        $atts = shortcode_atts($default_atts, $atts);
-
+    
         // Get the options from the database
         $options = get_option('wp_download_analyzer_options', array());
-
-        // If 'slug' is not set in the attributes or it's empty, use the value from the database
-        if (!isset($atts['slug']) || empty($atts['slug'])) {
-            $atts['slug'] = isset($options['slug']) ? $options['slug'] : '';
-        }
-
-        // If 'type' is not set in the attributes or it's empty, use the value from the database
-        if (!isset($atts['type']) || empty($atts['type'])) {
-            $atts['type'] = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
-        }
-
+    
+        // Default values
+        $default_atts = array(
+            'slug' => isset($options['slug']) ? $options['slug'] : 'null',
+            'type' => isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin' // Either 'Plugin' or 'Theme'
+        );
+    
+        // Merge the attributes with the default values
+        $atts = shortcode_atts($default_atts, $atts);
+    
         // Now you can use $atts['slug'] and $atts['type'] within this function
-
-        wp_download_analyzer_enqueue_extra_styles();
-
+    
         // Diagnostics Switch
         $diagnostics = 'Off';
         
         // Set the Analysis Type: Plugin or Theme
         $options = get_option('wp_download_analyzer_options');
         $analysis_type = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
+
+        $slug = $atts['slug'];
+        $analysis_type = $atts['type'];
         
         if (empty($slug)) {
-            return "Please set a slug for the Plugin or Theme downloads you wish to analyze.";
+            return "<div><p><b>ERROR: Please set a slug for the Plugin or Theme downloads you wish to analyze.</b></p></div>";
         }
         
         if ($analysis_type == 'Plugin'){

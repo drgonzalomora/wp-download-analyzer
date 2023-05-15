@@ -49,7 +49,7 @@ Now you can easily track daily downloads for a plugin or theme.
 1. Upload the 'wp-download-analyzer' folder to the '/wp-content/plugins/' directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to the 'Settings > WP Downaload Analyzer' page and enter your slug for the plugin or theme to monitor.
-4. Add the WP Download Analyzer to any page or post using the provided shortcode: [wp_download_stats slug=the-name-of-your-slug]
+4. Add the WP Download Analyzer to any page or post using the provided shortcode: [wp_download_stats slug='Name of Slug' type='Plugin or Theme']
 
 == Frequently Asked Questions ==
 
