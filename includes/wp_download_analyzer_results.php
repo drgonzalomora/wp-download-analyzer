@@ -2,21 +2,45 @@
 /**
  * WP Download Analyzer for WordPress - Settings Page
  *
- * This file contains the code for the WP Download Analyzer results page.
+ * This file contains the code for the WP Download Analyzer Results page.
  *
  * @package wp-download-analyzer
  */
 
 if (!function_exists('wp_download_analyzer')) {
-    function wp_download_analyzer() {
+    function wp_download_analyzer($atts = array()) {
+
         wp_download_analyzer_enqueue_extra_styles();
-        $default_options = array('slug' => '');
-        $options = get_option('wp_download_analyzer_options', $default_options);
-        $slug = $options['slug'];
+        
+        // Default values
+        $default_atts = array(
+            'slug' => '',
+            'type' => 'Plugin' // Either 'Plugin' or 'Theme'
+        );
+
+        // Merge the attributes with the default values
+        $atts = shortcode_atts($default_atts, $atts);
+
+        // Get the options from the database
+        $options = get_option('wp_download_analyzer_options', array());
+
+        // If 'slug' is not set in the attributes or it's empty, use the value from the database
+        if (!isset($atts['slug']) || empty($atts['slug'])) {
+            $atts['slug'] = isset($options['slug']) ? $options['slug'] : '';
+        }
+
+        // If 'type' is not set in the attributes or it's empty, use the value from the database
+        if (!isset($atts['type']) || empty($atts['type'])) {
+            $atts['type'] = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
+        }
+
+        // Now you can use $atts['slug'] and $atts['type'] within this function
+
+        wp_download_analyzer_enqueue_extra_styles();
 
         // Diagnostics Switch
         $diagnostics = 'Off';
-
+        
         // Set the Analysis Type: Plugin or Theme
         $options = get_option('wp_download_analyzer_options');
         $analysis_type = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
@@ -111,7 +135,6 @@ if (!function_exists('wp_download_analyzer')) {
         $header .= '<a class="button button-primary" href="' . esc_url(admin_url('admin-post.php?action=wp_download_analyzer_download_csv')) . '">Download Data as CSV</a>';
         $header .= '</div>';
 
-
         $header .= "<p><b>Type: {$analysis_type}</b></p>";
 
         if ($analysis_type == 'Plugin') {
@@ -185,9 +208,10 @@ if (!function_exists('wp_download_analyzer')) {
         $table .= '</tbody></table>';
         $table .= '</div>';
 
-        // CHARTING CODE WAS HERE - MOVED TO GRAPH
+        // CHARTING CODE WAS HERE - MOVED TO GRAPH MODULE
         $chart_js = wp_download_analyzer_render_chart($downloads_data);
-        
+
+
         return $header . $table . $chart_js;
     }
     add_shortcode('wp_download_analyzer', 'wp_download_analyzer');
@@ -198,9 +222,7 @@ if (!function_exists('wp_download_analyzer')) {
         $default_options = array('slug' => '');
         $options = get_option('wp_download_analyzer_options', $default_options);
         $slug = $options['slug'];
-
-        // TEMPORARY
-        // $analysis_type = 'Plugin';
+        $analysis_type = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
         
         if (empty($slug)) {
             wp_die("Please set a slug for the Plugin or Theme Downloads you wish to analyze.");

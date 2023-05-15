@@ -1,6 +1,6 @@
-=== Chatbot ChatGPT for WordPress ===
+=== WP Download Analyzer for WordPress ===
 Contributors: Kognetiks
-Tags: chatbot, chatgpt, openai, ai, customer-support, conversational chat
+Tags: plugin, theme, tracker, statitics, trends, download, csv, developer, creator 
 Donate link: https://kognetiks.com/wordpress-plugins/donate/
 Requires at least: 5.0
 Tested up to: 6.2
@@ -9,100 +9,69 @@ Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Easily integrate OpenAI's ChatGPT API into your WordPress website with this powerful, AI-driven chatbot plugin for personalized support and engagement.
+Easily retrieve plugin or theme daily download statistics from WordPress.org including version data, summary data, and download detailed data as csv.
 
 == Description ==
 
-Chatbot ChatGPT for WordPress is a plugin that allows you to effortlessly integrate OpenAI's ChatGPT API into your website, providing a powerful, AI-driven chatbot for enhanced user experience and personalized support.
+WP Download Analyzer is a user-friendly plugin designed for developers and creators who need an efficient way to track daily downloads of plugins and themes. 
 
-ChatGPT is a conversational AI platform that uses natural language processing and machine learning algorithms to interact with users in a human-like manner. It is designed to answer questions, provide suggestions, and engage in conversations with users. ChatGPT is important because it can provide assistance and support to people who need it, especially in situations where human support is not available or is limited. It can also be used to automate customer service, reduce response times, and improve customer satisfaction. Moreover, ChatGPT can be used in various fields such as healthcare, education, finance, and many more.
+This plugin presents a valuable opportunity to monitor adoption rates for free plugins or themes. It is based on the principle that the number of daily downloads, indicated by how often the zip file has been downloaded, is a strong measure of popularity and acceptance.
 
-Chatbot ChatGPT leverages the OpenAI platform using the gpt-3.5-turbo model brings it to life within your WordPress Website.
+The WP Download Analyzer makes tracking easy by displaying both summary and detailed data, including graphical charts that represent the daily downloads of plugins and themes. This data is conveniently displayed on your WordPress site's Dashboard, allowing for easy access and review.
 
-**Important Note:** This plugin requires an API key from OpenAI to function correctly. You can obtain an API key by signing up at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).
+For more in-depth insights, detailed information is also available on the Results tab of the Plugin's Settings page. This feature enables developers and creators to dive deeper into the analytics of their products.
 
-Official website: [Kognetiks.com](https://kognetiks.com/wordpress-plugins/chatbot-chatgpt/)
+One of the standout features of the WP Download Analyzer is its ability to export the daily download history of a plugin or theme into a CSV file. This feature empowers developers and creators to carry out further analysis, helping to drive decision making and strategy planning.
+
+In sum, WP Download Analyzer is an essential tool for WordPress developers and creators aiming to monitor and analyze the popularity and reach of their plugins and themes effectively. It's a must-have for any SEO-focused strategy, ensuring that your WordPress creations are reaching their intended audience and delivering on their potential.
+
+Official website: [Kognetiks.com](https://kognetiks.com/wordpress-plugins/wp-download-analyzer/)
 
 == Features ==
 
-* Easy setup and integration with OpenAI's ChatGPT API
-* Floating chatbot interface with customizable appearance
-* User-friendly settings page for managing API key and other parameters
-* Collapsible chatbot interface when not in use
-* Initial greeting message for first-time users
-* Shortcode to embed the chatbot on any page or post
-* Setting to determine if chatbot should start opened or closed
-* Chatbot maintains state when navigating between pages
-* Chatbot name and initial and subsequent greetings are configurable
+* Works with Plugins and Themes
+* Results displayed on the Dashboard include Summary Data and a Chart
+* Results tab in Setting shows Version Data, Summary Data, Detail Data and a Chart
+* Version Data includes the percentage by Version
+* Summary Data includes Today, Yesterday, Last week, All time
+* Detail Data is by Day with Download Count
 
 == Getting Started ==
 
-1. Obtain your API key by signign up at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).
-2. Install and activate the Chatbot ChatGPT plugin.
-3. Navigate to the settings page (Settings > API/Model) and enter your API key.
-4. Customize the chatbot appearance and other parameters as needed.
-5. Add the chatbot to any page or post using the provided shortcode: [chatbot_chatgpt]
+1. Install and activate the plugin.
+2. Navigate to the settings page (Settings > Options) and enter your slug of the plugin or theme.
+3. Be sure to select the correct Analysis Type for either "Plugin" or "Theme" as appropriate.
 
-Now your website visitors can enjoy a seamless and personalized chat experience powered by OpenAI's ChatGPT API.
+Now you can easily track daily downloads for a plugin or theme.
 
 == Installation ==
 
-1. Upload the 'chatbot-chatgpt' folder to the '/wp-content/plugins/' directory.
+1. Upload the 'wp-download-analyzer' folder to the '/wp-content/plugins/' directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Go to the 'Settings > Chatbot ChatGPT' page and enter your OpenAI API key.
-4. Customize the chatbot appearance and other parameters as needed.
-5. Add the chatbot to any page or post using the provided shortcode: [chatbot_chatgpt]
+3. Go to the 'Settings > WP Downaload Analyzer' page and enter your slug for the plugin or theme to monitor.
+4. Add the WP Download Analyzer to any page or post using the provided shortcode: [wp_download_stats slug=the-name-of-your-slug]
 
 == Frequently Asked Questions ==
 
-= How do I obtain an API key for ChatGPT? =
+= What is the source of this daily download data for plugins and themes? =
 
-To obtain an API key, sign up for an account at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys). Once registered, you will have access to your API key.
+The data is obtained using the api endpoints described in the WordPress.org Documentation.  This documentation can be found at [https://codex.wordpress.org/WordPress.org_API](https://codex.wordpress.org/WordPress.org_API).
 
-= Can I customize the appearance of the chatbot? =
+= Is active installs available for plugins and themes? =
 
-Yes, the plugin comes with a default style, but you can easily customize the chatbot's appearance by editing the chatbot-chatgpt.css file or adding custom CSS rules to your WordPress theme.
+Active installs is only available at this time for themes.
 
-You can also customize the name of the chatbot, as well as changing the initial greeting and subsequent greeting.
+= Can I customize the appearance of the results and chart? =
 
-= Is the chatbot available in multiple languages? =
-
-The ChatGPT API currently supports English. However, you can configure the chatbot to work with other languages supported by OpenAI in the future as the API evolves.
-
-= Which OpenAI model does the plugin use? =
-
-Currently the plugin uses the gpt-3.5-turbo model from OpenAI.  This is the same model used in the ChatGPT product.
-
-As soon as the API for GPT-4 is available for general use, you will be able to select from the latest available models.
+Yes, the plugin comes with a default style, but you can easily customize the appearance the results and chart by editing the style.css file or adding custom CSS rules to your WordPress theme.
 
 == Screenshots ==
 
-1. Inital Chatbot ChatGPT display
-2. Ask Chatbot ChatGPT any question
-3. Get a response from Chatbot ChatGPT
-4. Settings and Options
-5. Mobile Experience - Initial Chatbot ChatGPT display
-6. Mobile Experience - Ask Chatbot ChatGTP any question
-7. Mobile Experience - Get a response from Chatbot ChatGPT
-8. Mobile Experience - Chatbot ChatGPT minimize (Lower Right)
+1. Dashboard widget
+2. Results tab
+3. Options settings
 
 == Changelog ==
-
-= 1.4.0 =
-* SVN Update Error - 1.2.0 did not update to 1.3.0
-
-= 1.3.0 =
-* Updated Setting Page adding tabs for API/Model, Greetings, and Support
-* Updated directory assets
-
-= 1.2.0 =
-* Removed initial styling on bot to ensure it renders at the appropriate time.
-* Save the conversation locally between bot sessions in local storage.
-
-= 1.1.0 =
-* If bot is closed stay closed or if open stay open when navigating between pages.
-* Ensure the Dashicons font is properly enqueued.
-* Added options to change Bot Name, start with the bot Open or Closed, and option to personalize Initial and Subsequent Greetings by the bot.
 
 = 1.0.0 =
 * Initial release.

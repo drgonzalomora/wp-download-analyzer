@@ -1,9 +1,8 @@
 <?php
 /**
- * WP Download Analyzer for WordPress - Dashboard Widget
+ * WP Download Analyzer for WordPress - Graph Support
  *
- * This file contains the code for the WP Download Analyzer Dashboard page.
- * It allows users to display high level statistcs.
+ * This file contains the code for the WP Download Analyzer Graphs.
  *
  * @package wp-download-analyzer
  */

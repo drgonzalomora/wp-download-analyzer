@@ -24,16 +24,26 @@
 // Analyzer Styles
 function wp_download_analyzer_enqueue_styles($hook) {
     // Check if we're on the WP Download Analyzer settings page
-    if ($hook === 'settings_page_wp-download-analyzer-stats') {
+    if ($hook === 'settings_page_wp-download-analyzer-settings' || $hook === 'index.php') {
+        wp_enqueue_style( 'dashicons' );
         wp_enqueue_style('wp-download-analyzer-styles', plugin_dir_url(__FILE__) . 'assets/css/style.css');
     }
 }
 add_action('admin_enqueue_scripts', 'wp_download_analyzer_enqueue_styles');
 
+
+// Add the Analyzer Styles to the frontend
+function wp_download_analyzer_enqueue_frontend_styles() {
+    wp_enqueue_style( 'dashicons' );
+    wp_enqueue_style('wp-download-analyzer-styles', plugin_dir_url(__FILE__) . 'assets/css/style.css');
+}
+add_action('wp_enqueue_scripts', 'wp_download_analyzer_enqueue_frontend_styles');
+
+
 // Chart Support
 function wp_download_analyzer_enqueue_scripts($hook) {
     // Check if we're on the WP Download Analyzer settings page
-    if ($hook === 'settings_page_wp-download-analyzer-stats') {
+    if ($hook === 'settings_page_wp-download-analyzer-settings' || $hook === 'index.php') {
         // Enqueue the required scripts
         wp_enqueue_script('jquery');
         wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array('jquery'), false, true);
@@ -41,6 +51,25 @@ function wp_download_analyzer_enqueue_scripts($hook) {
     }
 }
 add_action('admin_enqueue_scripts', 'wp_download_analyzer_enqueue_scripts');
+
+
+// Add Chart Support to the frontend
+function wp_download_analyzer_enqueue_frontend_scripts() {
+    // Enqueue the required scripts
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array('jquery'), false, true);
+    wp_enqueue_script('chartjs-adapter-date-fns', 'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js', array('chartjs'), false, true);
+}
+add_action('wp_enqueue_scripts', 'wp_download_analyzer_enqueue_frontend_scripts');
+
+
+// Add link to WP Download Analyzer options - setting page
+function wp_download_analyzer_plugin_action_links($links) {
+    $settings_link = '<a href="../wp-admin/options-general.php?page=wp-download-analyzer-settings">' . __('Settings', 'wp_download_analyzer') . '</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+}
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'wp_download_analyzer_plugin_action_links');
 
 // Settings
 include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_settings.php';
@@ -53,3 +82,6 @@ include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_graph.php';
 
 // Dashboard
 include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_dashboard.php';
+
+// Shortcode
+include plugin_dir_path(__FILE__) . 'includes/wp_download_analyzer_shortcode.php';

@@ -1,24 +1,61 @@
+/* 
+ * WP Download Analyzer - Stylesheet
+ * 
+ * This CSS file contains styles for the WP Download Analyzer plugin.
+ * 
+ * You may customize these styles as needed to match your website's design.
+ *
+ */
+
+
+/* Styling for the dashboard widget */
+#dashboard_wp_download_analyzer_dashboard_widget .wp-stats-table,
+#dashboard_wp_download_analyzer_dashboard_widget .chart-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+#dashboard_wp_download_analyzer_dashboard_widget .wp-stats-table th,
+#dashboard_wp_download_analyzer_dashboard_widget .wp-stats-table td {
+    min-width: 0 !important; /* Remove the minimum width */
+    max-width: 100% !important; /* Allow the cells to take up the full width of the table */
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+#dashboard_wp_download_analyzer_dashboard_widget .chart-container {
+    width: auto !important;
+    height: auto !important; /* Let the chart height be determined by its content */
+}
+
+
+/* Main Styling follows */
 .wp-stats-table {
-    width: 70ch;
+    /* width: 70ch; */
     border-collapse: collapse;
     margin-bottom: 20px;
 }
+
 .wp-stats-table th,
 .wp-stats-table td {
-    min-width: 30ch; /* Set the minimum column width to 30 characters */
-    max-width: 30ch; /* Set the maximum column width to 30 characters */
+    /* Set the maximum column width to 30 characters */
+    /* max-width: 30ch; */
+    /* Set the minimum column width to 30 characters */
+    /* min-width: 30ch;  */
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
     word-wrap: break-word; /* Wrap the text in case it's too long for the column width */
     overflow-wrap: break-word; /* Fallback for word-wrap */
 }
+
 .wp-stats-table thead {
     background-color: #f5f5f5;
 }
 
 .chart-container {
-    width: 70ch;
+    /* width: 70ch; */
     height: 400px;
 }
 

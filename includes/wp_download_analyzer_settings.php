@@ -2,7 +2,7 @@
 /**
  * WP Download Analyzer for WordPress - Settings Page
  *
- * This file contains the code for the WP Download Analyzer settings page.
+ * This file contains the code for the WP Download Analyzer Settings page.
  * It allows users to configure the Slug and other parameters.
  *
  * @package wp-download-analyzer
@@ -14,7 +14,7 @@ function wp_download_analyzer_menu() {
         'WP Download Analyzer Options',
         'WP Download Analyzer',
         'manage_options',
-        'wp-download-analyzer-stats',
+        'wp-download-analyzer-settings',
         'wp_download_analyzer_options_page'
     );
 }
@@ -30,22 +30,22 @@ function wp_download_analyzer_options_page() {
 
     ?>
     <div class="wrap">
-        <h1>WP Download Analyzer Settings</h1>
+        <h1><span class="dashicons dashicons-admin-plugins"></span> WP Download Analyzer Settings</h1>
         <h2 class="nav-tab-wrapper">
-            <a href="?page=wp-download-analyzer-stats&tab=options" class="nav-tab <?php echo $active_tab == 'options' ? 'nav-tab-active' : ''; ?>">Options</a>
-            <a href="?page=wp-download-analyzer-stats&tab=results" class="nav-tab <?php echo $active_tab == 'results' ? 'nav-tab-active' : ''; ?>">Results</a>
-            <a href="?page=wp-download-analyzer-stats&tab=support" class="nav-tab <?php echo $active_tab == 'support' ? 'nav-tab-active' : ''; ?>">Support</a>
+            <a href="?page=wp-download-analyzer-settings&tab=options" class="nav-tab <?php echo $active_tab == 'options' ? 'nav-tab-active' : ''; ?>">Options</a>
+            <a href="?page=wp-download-analyzer-settings&tab=results" class="nav-tab <?php echo $active_tab == 'results' ? 'nav-tab-active' : ''; ?>">Results</a>
+            <a href="?page=wp-download-analyzer-settings&tab=support" class="nav-tab <?php echo $active_tab == 'support' ? 'nav-tab-active' : ''; ?>">Support</a>
         </h2>
         <form method="post" action="options.php">
             <?php
             if ($active_tab == 'options') {
                 settings_fields('wp_download_analyzer_options');
-                do_settings_sections('wp-download-analyzer-stats');
+                do_settings_sections('wp-download-analyzer-settings');
             } elseif ($active_tab == 'results') {
                 echo wp_download_analyzer(); // Display the results here
             } elseif ($active_tab == 'support') {
                 settings_fields('wp_download_analyzer_support');
-                do_settings_sections('wp-download-analyzer-support');
+                do_settings_sections('wp_download_analyzer_support');
             }
             if ($active_tab !== 'results') {
                 submit_button();
@@ -65,9 +65,6 @@ function wp_download_analyzer_options_page() {
 }
 
 
-
-
-
 // Handle form submission
 function wp_download_analyzer_form_submit() {
     // Check for and process the form data
@@ -77,7 +74,7 @@ function wp_download_analyzer_form_submit() {
 
     // Redirect to the options page with the 'updated' query parameter
     $redirect_url = add_query_arg(array(
-        'page' => 'wp-download-analyzer-stats',
+        'page' => 'wp-download-analyzer-settings',
         'updated' => 'true'
     ), admin_url('options-general.php'));
 
@@ -99,7 +96,7 @@ function wp_download_analyzer_settings() {
         'wp_download_analyzer_main',
         'Main Settings',
         'wp_download_analyzer_section_text',
-        'wp-download-analyzer-stats'
+        'wp-download-analyzer-settings'
     );
     
 
@@ -107,7 +104,7 @@ function wp_download_analyzer_settings() {
         'wp_download_analyzer_slug',
         'Plugin Slug',
         'wp_download_analyzer_setting_slug',
-        'wp-download-analyzer-stats',
+        'wp-download-analyzer-settings',
         'wp_download_analyzer_main'
     );
 
@@ -115,9 +112,20 @@ function wp_download_analyzer_settings() {
         'wp_download_analyzer_analysis_type',
         'Analysis Type',
         'wp_download_analyzer_setting_analysis_type',
-        'wp-download-analyzer-stats',
+        'wp-download-analyzer-settings',
         'wp_download_analyzer_main'
     );
+
+    // Support settings tab - Ver 1.3.0
+    register_setting('wp-download-analyzer-support', 'wp_download_analyzer_support_key');
+
+    add_settings_section(
+        'wp_download_analyzer_support_section',
+        'Support',
+        'wp_download_analyzer_support_callback_section',
+        'wp_download_analyzer_support'
+    );
+
 }
 add_action('admin_init', 'wp_download_analyzer_settings');
 
@@ -152,5 +160,56 @@ function wp_download_analyzer_setting_analysis_type() {
         <option value='Plugin' <?php selected($analysis_type, 'Plugin'); ?>>Plugin</option>
         <option value='Theme' <?php selected($analysis_type, 'Theme'); ?>>Theme</option>
     </select>
+    <?php
+}
+
+// Support settings section callback
+function wp_download_analyzer_support_callback_section($args) {
+    ?>
+    <div>
+	<h3>Description</h3>
+    <p>WP Download Analyzer is a user-friendly plugin designed for developers and creators who need an efficient way to track daily downloads of plugins and themes.</p>
+    <p>This plugin presents a valuable opportunity to monitor adoption rates for free plugins or themes. It is based on the principle that the number of daily downloads, indicated by how often the zip file has been downloaded, is a strong measure of popularity and acceptance.</p>
+    <p>The WP Download Analyzer makes tracking easy by displaying both summary and detailed data, including graphical charts that represent the daily downloads of plugins and themes. This data is conveniently displayed on your WordPress site's Dashboard, allowing for easy access and review.</p>
+    <p>For more in-depth insights, detailed information is also available on the Results tab of the Plugin's Settings page. This feature enables developers and creators to dive deeper into the analytics of their products.</p>
+    <p>One of the standout features of the WP Download Analyzer is its ability to export the daily download history of a plugin or theme into a CSV file. This feature empowers developers and creators to carry out further analysis, helping to drive decision making and strategy planning.</p>
+    <p>In sum, WP Download Analyzer is an essential tool for WordPress developers and creators aiming to monitor and analyze the popularity and reach of their plugins and themes effectively. It's a must-have for any SEO-focused strategy, ensuring that your WordPress creations are reaching their intended audience and delivering on their potential.</p>
+    <h3>Official Sites:</h3>
+    <ul style="list-style-type: disc; list-style-position: inside; padding-left: 1em;"> 
+    <li><a href="https://kognetiks.com/wordpress-plugins/wp-download-analyzer/" rel="nofollow ugc" target="_blank">Kognetiks.com</a></li>
+    <li><a href="https://github.com/kognetiks/wp-download-analyzer" target="_blank">https://github.com/kognetiks/wp-download-analyzer</a></li>
+    <li><a href="https://wordpress.org/plugins/wp-download-analyzer/" target="_blank">https://wordpress.org/plugins/wp-download-analyzer/</a></li>
+    </ul>
+    <h3>Features</h3>
+    <ul style="list-style-type: disc; list-style-position: inside; padding-left: 1em;">
+    <li>Works with Plugins and Themes</li>
+    <li>Results displayed on the Dashboard include Summary Data and a Chart</li>
+    <li>Results tab in Setting shows Version Data, Summary Data, Detail Data and a Chart</li>
+    <li>Version Data includes the percentage by Version</li>
+    <li>Summary Data includes Today, Yesterday, Last week, All time</li>
+    <li>Detail Data is by Day with Download Count</li>
+    </ul>
+    <h3>Getting Started</h3>
+    <ol>
+    <li>Install and activate the plugin.</li>
+    <li>Navigate to the settings page (Settings > Options) and enter your slug of the plugin or theme.</li>
+    <li>Be sure to select the correct Analysis Type for either "Plugin" or "Theme" as appropriate.</li>
+    </ol>
+    <h2>Installation</h2>
+	<ol>
+    <li>Upload the &#8216;wp-download-analyzer&#8217; folder to the &#8216;/wp-content/plugins/&#8217; directory.</li>
+    <li>Activate the plugin through the &#8216;Plugins&#8217; menu in WordPress.</li>
+    <li>Go to the &#8216;Settings &gt; WP Downaload Analyzer&#8217; page and enter your slug for the plugin or theme to monitor.</li>
+    </ol>
+    <h2>Frequently Asked Questions</h2>
+	<ol>
+    <li>What is the source of this daily download data for plugins and themes?</li>
+    <ul style="list-style-type: disc; list-style-position: inside; padding-left: 1em;"><li>The data is obtained using the api endpoints described in the WordPress.org Documentation.  This documentation can be found at <a href="https://codex.wordpress.org/WordPress.org_API" target="_blank">https://codex.wordpress.org/WordPress.org_API</a>.</li></ul>
+    <li>Is active installs available for plugins and themes?</li>
+    <ul style="list-style-type: disc; list-style-position: inside; padding-left: 1em;"><li>Active installs is only available at this time for themes.</li></ul>
+    <li>Can I customize the appearance of the results and chart?</li>
+    <ul style="list-style-type: disc; list-style-position: inside; padding-left: 1em;"><li>Yes, the plugin comes with a default style, but you can easily customize the appearance the results and chart by editing the style.css file or adding custom CSS rules to your WordPress theme.</li></ul>
+    </ol>
+    </div>
     <?php
 }
