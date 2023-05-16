@@ -21,23 +21,35 @@
  * 
  */
 
-// Analyzer Styles
-function wp_download_analyzer_enqueue_styles($hook) {
-    // Check if we're on the WP Download Analyzer settings page
-    if ($hook === 'settings_page_wp-download-analyzer-settings' || $hook === 'index.php') {
-        wp_enqueue_style( 'dashicons' );
-        wp_enqueue_style('wp-download-analyzer-styles', plugin_dir_url(__FILE__) . 'assets/css/style.css');
-    }
-}
-add_action('admin_enqueue_scripts', 'wp_download_analyzer_enqueue_styles');
-
-
-// Add the Analyzer Styles to the frontend
-function wp_download_analyzer_enqueue_frontend_styles() {
+// Enqueue all styles
+function wp_download_analyzer_enqueue_all_styles() {
+    // Always enqueue dashicons and the plugin's style.css
     wp_enqueue_style( 'dashicons' );
     wp_enqueue_style('wp-download-analyzer-styles', plugin_dir_url(__FILE__) . 'assets/css/style.css');
+
+    // If we're on the WP Download Analyzer settings page or the front-end, enqueue extra styles
+    $hook = isset($GLOBALS['pagenow']) ? $GLOBALS['pagenow'] : false;
+    if ( $hook === 'settings_page_wp-download-analyzer-settings' || !is_admin() ) {
+        wp_register_style('wp-download-analyzer-extra-style', false);
+        wp_enqueue_style('wp-download-analyzer-extra-style');
+
+        $custom_css = "
+            .wp-download-button-container {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+            .wp-download-analyzer-button {
+                border-radius: 4px;
+            }
+        ";
+
+        wp_add_inline_style('wp-download-analyzer-extra-style', $custom_css);
+
+    }
 }
-add_action('wp_enqueue_scripts', 'wp_download_analyzer_enqueue_frontend_styles');
+add_action('wp_enqueue_scripts', 'wp_download_analyzer_enqueue_all_styles');
+add_action('admin_enqueue_scripts', 'wp_download_analyzer_enqueue_all_styles');
 
 
 // Chart Support
@@ -59,7 +71,7 @@ function wp_download_analyzer_enqueue_frontend_scripts() {
     wp_enqueue_script('jquery');
     wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array('jquery'), false, true);
     wp_enqueue_script('chartjs-adapter-date-fns', 'https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js', array('chartjs'), false, true);
-}
+    }
 add_action('wp_enqueue_scripts', 'wp_download_analyzer_enqueue_frontend_scripts');
 
 

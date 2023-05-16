@@ -10,7 +10,7 @@
 if (!function_exists('wp_download_analyzer')) {
     function wp_download_analyzer($atts = array()) {
 
-        wp_download_analyzer_enqueue_extra_styles();
+        // wp_download_analyzer_enqueue_extra_styles();
     
         // Get the options from the database
         $options = get_option('wp_download_analyzer_options', array());
@@ -119,13 +119,17 @@ if (!function_exists('wp_download_analyzer')) {
         $header = "";
         $header .= "<h1>WP Download Analyzer: {$slug}</h1>";
 
-        // Refresh Data and Download link
-        // $header .= '<p><a href="' . esc_url(admin_url('admin-post.php?action=wp_download_analyzer_download_csv')) . '" class="wpda-download-csv-btn">Download Data as CSV</a></p>';
-        $header .= '<div class="button-container">';
-        $header .= '<a class="button button-primary" href="' . esc_url(add_query_arg(array('settings-updated' => false))) . '">Refresh Results</a>';
-        $header .= '<a class="button button-primary" href="' . esc_url(admin_url('admin-post.php?action=wp_download_analyzer_download_csv')) . '">Download Data as CSV</a>';
-        $header .= '</div>';
-
+        // Refresh Data and Download link (only on admin page for now)
+        $header .= '<div class="wp-download-container">';
+        $header .= '<a class="button button-primary wp-download-button-special" href="' . esc_url(add_query_arg(array('settings-updated' => false))) . '">Refresh Results</a>';
+        if (is_admin()) {
+            $header .= " ";
+            $header .= '<a class="button button-primary" href="' . esc_url(admin_url('admin-post.php?action=wp_download_analyzer_download_csv')) . '">Download Data as CSV</a>';
+        }
+        $header .= "</div>";
+        if (!is_admin()) {
+            $header .= "<br>";
+        }
         $header .= "<p><b>Type: {$analysis_type}</b></p>";
 
         if ($analysis_type == 'Plugin') {
@@ -142,7 +146,6 @@ if (!function_exists('wp_download_analyzer')) {
         $header .= "<p>{$analysis_type} History: <a href='{$url}' target='_blank' rel='nofollow'>{$url}</a></p>";
         $header .= "<p>{$analysis_type} Summary: <a href='{$history_url}' target='_blank' rel='nofollow'>{$history_url}</a></p>";
         
-
         //
         // IF RETURN DATA IS EMPTY THEN DON'T DO SECTION 
         //
@@ -210,8 +213,10 @@ if (!function_exists('wp_download_analyzer')) {
 
     // Download the data
     function wp_download_analyzer_download_csv() {
+
         $default_options = array('slug' => '');
         $options = get_option('wp_download_analyzer_options', $default_options);
+
         $slug = $options['slug'];
         $analysis_type = isset($options['analysis_type']) ? $options['analysis_type'] : 'Plugin';
         
@@ -249,24 +254,5 @@ if (!function_exists('wp_download_analyzer')) {
         exit;
     }
     add_action('admin_post_wp_download_analyzer_download_csv', 'wp_download_analyzer_download_csv');
-}
 
-
-// Special CSS include to ensure button are wrapped
-function wp_download_analyzer_enqueue_extra_styles() {
-    wp_register_style('wp-download-analyzer-style', false);
-    wp_enqueue_style('wp-download-analyzer-style');
-    
-    $custom_css = "
-        .button-container {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        .wp-download-analyzer-button {
-            border-radius: 4px;
-        }
-    ";
-
-    wp_add_inline_style('wp-download-analyzer-style', $custom_css);
 }

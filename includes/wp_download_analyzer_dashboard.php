@@ -99,6 +99,28 @@ function wp_download_analyzer_dashboard_widget_content() {
     // echo "Downloads";
     echo $chart_js;
 
+
+    // Add hover over to Settings page
+    ?>
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        var widget_id = 'wp_download_analyzer_dashboard_widget';
+        var widget_header = $('#' + widget_id + ' h2.hndle');
+        var widget_title = widget_header.text();
+        var options_url = 'options-general.php?page=wp-download-analyzer-settings'; // Update with your actual options page URL
+        
+        widget_header.hover(
+            function() {
+                $(this).html('WP Download Analyzer <a href="' + options_url + '">Settings</a>');
+            }, 
+            function() {
+                $(this).text(widget_title);
+            }
+        );
+    });
+    </script>
+    <?php
+
 }
 
 
