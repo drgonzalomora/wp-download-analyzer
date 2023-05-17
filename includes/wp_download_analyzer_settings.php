@@ -20,6 +20,7 @@ function wp_download_analyzer_menu() {
 }
 add_action('admin_menu', 'wp_download_analyzer_menu');
 
+
 // WP Download Analyszer Options
 function wp_download_analyzer_options_page() {
     if (!current_user_can('manage_options')) {
@@ -31,12 +32,44 @@ function wp_download_analyzer_options_page() {
     ?>
     <div class="wrap">
         <h1><span class="dashicons dashicons-admin-plugins"></span> WP Download Analyzer Settings</h1>
+
+        <!-- Message Box - Ver 1.0.0 -->
+        <div id="message-box-container"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const wpDownloadAnalyzerSettingsForm = document.getElementById('wp-download-analyzer-setting-form');
+                // Read the start status
+                const wpDownloadAnalyzerReminderCount = localStorage.getItem('wpDownloadAnalyzerReminderCount') || 0;
+
+                if (wpDownloadAnalyzerReminderCount < 5) {
+                    const messageBox = document.createElement('div');
+                    messageBox.id = 'rateReviewMessageBox';
+                    messageBox.innerHTML = `
+                    <div id="rateReviewMessageBox" style="background-color: white; border: 1px solid black; padding: 10px; position: relative;">
+                        <div class="message-content" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span><b>Are you enjoying the enhanced experience provided by our plugin?</b> Your input is incredibly valuable! Please click here to leave a <a href="https://wordpress.org/support/plugin/wp-download-analyzer/reviews/" target="_blank">rating and review</a> for our plugin. It won't take long, but your feedback helps us improve and grow. <b>Thank you for being an essential part of our journey!<b></span>
+                            <button id="closeMessageBox" class="dashicons dashicons-dismiss" style="background: none; border: none; cursor: pointer; outline: none; padding: 0; margin-left: 10px;"></button>
+                            
+                        </div>
+                    </div>
+                    `;
+
+                    document.querySelector('#message-box-container').insertAdjacentElement('beforeend', messageBox);
+
+                    document.getElementById('closeMessageBox').addEventListener('click', function() {
+                        messageBox.style.display = 'none';
+                        localStorage.setItem('wpDownloadAnalyzerReminderCount', parseInt(wpDownloadAnalyzerReminderCount, 10) + 1);
+                    });
+                }
+            });
+        </script>
+
         <h2 class="nav-tab-wrapper">
             <a href="?page=wp-download-analyzer-settings&tab=options" class="nav-tab <?php echo $active_tab == 'options' ? 'nav-tab-active' : ''; ?>">Options</a>
             <a href="?page=wp-download-analyzer-settings&tab=results" class="nav-tab <?php echo $active_tab == 'results' ? 'nav-tab-active' : ''; ?>">Results</a>
             <a href="?page=wp-download-analyzer-settings&tab=support" class="nav-tab <?php echo $active_tab == 'support' ? 'nav-tab-active' : ''; ?>">Support</a>
         </h2>
-        <form method="post" action="options.php">
+        <form id="wp-download-analyzer-setting-form" method="post" action="options.php">
             <?php
             if ($active_tab == 'options') {
                 settings_fields('wp_download_analyzer_options');
@@ -116,7 +149,7 @@ function wp_download_analyzer_settings() {
         'wp_download_analyzer_main'
     );
 
-    // Support settings tab - Ver 1.3.0
+    // Support settings tab
     register_setting('wp-download-analyzer-support', 'wp_download_analyzer_support_key');
 
     add_settings_section(
@@ -135,6 +168,7 @@ function wp_download_analyzer_section_text() {
     echo '<p>Enter the plugin or theme slug to display its downloads statistics:</p>';
 }
 
+
 // Setting Slug
 function wp_download_analyzer_setting_slug() {
     $default_options = array('slug' => '');
@@ -143,6 +177,7 @@ function wp_download_analyzer_setting_slug() {
 }
 
 
+// Validate and snitize input
 function wp_download_analyzer_options_validate($input) {
     $newinput['slug'] = sanitize_text_field($input['slug']);
     $newinput['analysis_type'] = in_array($input['analysis_type'], array('Plugin', 'Theme')) ? $input['analysis_type'] : 'Plugin';
@@ -162,6 +197,7 @@ function wp_download_analyzer_setting_analysis_type() {
     </select>
     <?php
 }
+
 
 // Support settings section callback
 function wp_download_analyzer_support_callback_section($args) {

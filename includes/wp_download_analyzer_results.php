@@ -10,8 +10,6 @@
 if (!function_exists('wp_download_analyzer')) {
     function wp_download_analyzer($atts = array()) {
 
-        // wp_download_analyzer_enqueue_extra_styles();
-    
         // Get the options from the database
         $options = get_option('wp_download_analyzer_options', array());
     
@@ -24,7 +22,7 @@ if (!function_exists('wp_download_analyzer')) {
         // Merge the attributes with the default values
         $atts = shortcode_atts($default_atts, $atts);
     
-        // Now you can use $atts['slug'] and $atts['type'] within this function
+        // Now use $atts['slug'] and $atts['type'] within this function
     
         // Diagnostics Switch
         $diagnostics = 'Off';
@@ -93,9 +91,8 @@ if (!function_exists('wp_download_analyzer')) {
                     'request' => serialize((object)array(
                         'slug' => $slug,
                         'fields' => array(
-                            'versions' => false, // Set this to true to get version details.
-                            'active_installs' => true, // Set this to true to get active installs.
-                            // Add any other fields you need here.
+                            'versions' => false, // Set this to true to get version details
+                            'active_installs' => true, // Set this to true to get active installs
                         )
                     ))
                 )
@@ -104,13 +101,13 @@ if (!function_exists('wp_download_analyzer')) {
             if (!is_wp_error($response)) {
                 $theme_details = unserialize(wp_remote_retrieve_body($response));
                 if ($diagnostics == 'On') {
-                    // Print the theme details, including the version details and active installs.
+                    // Print the theme details, including the version details and active installs
                     echo '<pre>';
                     print_r($theme_details);
                     echo '</pre>';
                 }
             } else {
-                echo 'An error occurred while fetching theme details.';
+                echo 'ERROR: An error occurred while fetching theme details.';
             }
 
         }
@@ -146,9 +143,6 @@ if (!function_exists('wp_download_analyzer')) {
         $header .= "<p>{$analysis_type} History: <a href='{$url}' target='_blank' rel='nofollow'>{$url}</a></p>";
         $header .= "<p>{$analysis_type} Summary: <a href='{$history_url}' target='_blank' rel='nofollow'>{$history_url}</a></p>";
         
-        //
-        // IF RETURN DATA IS EMPTY THEN DON'T DO SECTION 
-        //
         // Return no data available
         if (empty($downloads_data)) {
             return $header . "<div><p>Download Data: No data available.</p><p>{$history_url}</p></div>";
@@ -202,9 +196,8 @@ if (!function_exists('wp_download_analyzer')) {
         $table .= '</tbody></table>';
         $table .= '</div>';
 
-        // CHARTING CODE WAS HERE - MOVED TO GRAPH MODULE
+        // Graph the data
         $chart_js = wp_download_analyzer_render_chart($downloads_data);
-
 
         return $header . $table . $chart_js;
     }

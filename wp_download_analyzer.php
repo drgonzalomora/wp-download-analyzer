@@ -52,7 +52,7 @@ add_action('wp_enqueue_scripts', 'wp_download_analyzer_enqueue_all_styles');
 add_action('admin_enqueue_scripts', 'wp_download_analyzer_enqueue_all_styles');
 
 
-// Chart Support
+// Chart Support for the admin page
 function wp_download_analyzer_enqueue_scripts($hook) {
     // Check if we're on the WP Download Analyzer settings page
     if ($hook === 'settings_page_wp-download-analyzer-settings' || $hook === 'index.php') {
@@ -65,7 +65,7 @@ function wp_download_analyzer_enqueue_scripts($hook) {
 add_action('admin_enqueue_scripts', 'wp_download_analyzer_enqueue_scripts');
 
 
-// Add Chart Support to the frontend
+// Add Chart Support for the frontend/shortcode
 function wp_download_analyzer_enqueue_frontend_scripts() {
     // Enqueue the required scripts
     wp_enqueue_script('jquery');

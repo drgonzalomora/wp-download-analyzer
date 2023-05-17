@@ -9,22 +9,22 @@
 
 
 /* Styling for the dashboard widget */
-#dashboard_wp_download_analyzer_dashboard_widget .wp-stats-table,
-#dashboard_wp_download_analyzer_dashboard_widget .chart-container {
+#dashboard-wp-download-analyzer-dashboard-widget .wp-stats-table,
+#dashboard-wp-download-analyzer-dashboard-widget .chart-container {
     width: 100% !important;
     max-width: 100% !important;
     overflow-x: auto !important;
 }
 
-#dashboard_wp_download_analyzer_dashboard_widget .wp-stats-table th,
-#dashboard_wp_download_analyzer_dashboard_widget .wp-stats-table td {
+#dashboard-wp-download-analyzer-dashboard-widget .wp-stats-table th,
+#dashboard-wp-download-analyzer-dashboard-widget .wp-stats-table td {
     min-width: 0 !important; /* Remove the minimum width */
     max-width: 100% !important; /* Allow the cells to take up the full width of the table */
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
 }
 
-#dashboard_wp_download_analyzer_dashboard_widget .chart-container {
+#dashboard-wp-download-analyzer-dashboard-widget .chart-container {
     width: auto !important;
     height: auto !important; /* Let the chart height be determined by its content */
 }
@@ -59,21 +59,21 @@
     height: 400px;
 }
 
-.wp_download_analyzer_tabs {
+.wp-download-analyzer-tabs {
     margin-bottom: 20px;
 }
 
-.wp_download_analyzer_tab_links {
+.wp-download-analyzer-tab-links {
     list-style: none;
     padding: 0;
     display: flex;
 }
 
-.wp_download_analyzer_tab_links li {
+.wp-download-analyzer-tab-links li {
     margin-right: 5px;
 }
 
-.wp_download_analyzer_tab_links li a {
+.wp-download-analyzer-tab-links li a {
     display: inline-block;
     padding: 5px 10px;
     background-color: #f1f1f1;
@@ -84,18 +84,18 @@
     border-radius: 3px 3px 0 0;
 }
 
-.wp_download_analyzer_tab_links li a.active {
+.wp-download-analyzer-tab-links li a.active {
     background-color: #fff;
     border-bottom: 1px solid #fff;
 }
 
-.wp_download_analyzer_tab_content {
+.wp-download-analyzer-tab-content {
     border: 1px solid #ccc;
     padding: 20px;
     border-radius: 3px;
 }
 
-.wp_download_analyzer_tab {
+.wp-download-analyzer-tab {
     display: none;
 }
 

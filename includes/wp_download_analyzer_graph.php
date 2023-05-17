@@ -27,8 +27,11 @@
             )
         )
     );
+
+    // Chart data results
     $chart_data_json = json_encode($chart_data);
-    
+
+    // Chart the data
     $chart_js = <<<EOT
     <script>
     jQuery(document).ready(function() {
@@ -59,8 +62,7 @@
     </script>
     EOT;
 
-    // echo $chart_js;
-
+    // Append the chart to the results table
     $table = $table . $chart_js;
 
     return $table;

@@ -8,10 +8,7 @@
  * @package wp-download-analyzer
  */
 
-
 function wp_download_analyzer_dashboard_widget_content() {
-
-    // wp_download_analyzer_enqueue_extra_styles();
 
     // Fetch the downloads_data
     $default_options = array('slug' => '');
@@ -36,7 +33,6 @@ function wp_download_analyzer_dashboard_widget_content() {
     } elseif ($analysis_type == 'Theme'){
         $url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}";
         $history_url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}&historical_summary=1";
-        // $history_url = "https://api.wordpress.org/stats/themes/1.0/downloads.php?slug={$slug}";
         $api_url = "https://api.wordpress.org/themes/info/1.0/";
     }
 
@@ -99,8 +95,7 @@ function wp_download_analyzer_dashboard_widget_content() {
     // echo "Downloads";
     echo $chart_js;
 
-
-    // Add hover over to Settings page
+    // Add hover over to link to the Options page from the dashboard widget
     ?>
     <script type="text/javascript">
     jQuery(document).ready(function($) {
@@ -124,6 +119,7 @@ function wp_download_analyzer_dashboard_widget_content() {
 }
 
 
+// Add WP Download Analyzer widget to the admin dashboard
 function wp_download_analyzer_add_dashboard_widget() {
     wp_add_dashboard_widget(
         'wp_download_analyzer_dashboard_widget', // Widget ID
@@ -131,5 +127,4 @@ function wp_download_analyzer_add_dashboard_widget() {
         'wp_download_analyzer_dashboard_widget_content' // Callback function to display the widget content
     );
 }
-
 add_action('wp_dashboard_setup', 'wp_download_analyzer_add_dashboard_widget');
